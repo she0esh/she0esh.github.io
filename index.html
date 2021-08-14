@@ -3,10 +3,1094 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  grid-template-rows: repeat(5, 60px);
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  border: 7px solid;
+  border-radius: 15px;
+  box-shadow: 0 0 80px #a44ce6;
+}
+.tile:nth-child(1) {
+  border-radius: 5px 0 0 0;
+}
+.tile:nth-child(5) {
+  border-radius: 0 5px 0 0;
+}
+.tile:nth-child(21) {
+  border-radius: 0 0 0 5px;
+}
+.tile:nth-child(25) {
+  border-radius: 0 0 5px 0;
+}
+.tile {
+  border: 1px solid;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+#score {
+  position: absolute;
+  bottom: 20%;
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+.moonshadow {
+  background: #fff !important;
+  box-shadow: 7px 7px 20px white, -7px -7px 20px white, 7px -7px 20px white,
+    -7px 7px 20px white !important;
+}
+#darkBtn {
+  background: gold;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 4%;
+  font-family: "Trebuchet MS", sans-serif;
+  box-shadow: 7px 7px 20px gold, -7px -7px 20px gold, 7px -7px 20px gold,
+    -7px 7px 20px gold;
+  border: none;
+  cursor: pointer;
+}
+.dark-mode {
+  background: #000;
+  border: #fff;
+  color: #fff;
+}
+.purple {
+  background: #a44ce6;
+}
+.scorecolor {
+  color: #a44ce6;
+}
+#gameover {
+  position: absolute;
+  bottom: 10%;
+  font-size: 1.6rem;
+  font-weight: bold;
+  font-family: "Trebuchet MS", sans-serif;
+}
+#gameoverspan {
+  color: #a44ce6;
+}
+div.fadeOut {
+  opacity: 0;
+  pointer-events: none;
+}
+div.fadeIn {
+  opacity: 1;
+  pointer-events: all;
+}
+.all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.25s ease 0.25s;
+}
+.intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-family: "Trebuchet MS", sans-serif;
+  text-align: center;
+  text-shadow: 0 0 10px #a44ce6;
+  transition: opacity 0.25s ease;
+}
+#startgame {
+  margin-top: 15px;
+  width: 80px;
+  height: 30px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #a44ce6;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #fc9eff, #a44ce6);
+}
+#heart-sign {
+  color: #8730c9;
+}
+    </style>
     <title>Hello</title>
 </head>
 <body>
-    <h1>Sheeeeeesh</h1>
-    <p>hello</p>
+    <div class="intro">
+        <h1>Click to start the game</h1>
+        <button id="startgame">Start</button>
+      </div>
+      <button id="darkBtn" onclick="darkmode()"></button>
+      <div class="all fadeOut">
+        <p id="score">your tries: <span id="scorespan">0</span></p>
+        <div class="grid"></div>
+        <p id="gameover">
+          Make all the squares <span id="gameoverspan">purple!</span>
+        </p>
+      </div>
+      <div class="footer">
+        <p>Made in <span id="heart-sign">&#10084;</span> by sheesh</p>
+      </div>
+    <script>const width = 5;
+        const height = 5;
+        var counter = 0;
+        var gameOver = document.getElementById("gameover");
+        let defaultPositions = [1, 3, 5, 6, 12, 15];
+          // let defaultPositions = [
+          //   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 18, 19, 20, 22, 23, 24,
+          // ];
+  
+        const grid = document.querySelector(".grid");
+        for (let i = 0; i < width * height; i++) {
+          const tile = document.createElement("div");
+          tile.setAttribute("class", "tile");
+          tile.innerHTML = i + 1;
+          grid.appendChild(tile);
+        }
+        const tiles = document.querySelectorAll(".grid .tile");
+  
+        for (const i of defaultPositions) {
+          const tilePart = tiles[i];
+          tilePart.classList.toggle("purple");
+        }
+  
+        for (i = 0; i < tiles.length; i++) {
+          tiles[i].addEventListener("click", score);
+          tiles[0].addEventListener("click", tileNum1);
+          tiles[1].addEventListener("click", tileNum2);
+          tiles[2].addEventListener("click", tileNum3);
+          tiles[3].addEventListener("click", tileNum4);
+          tiles[4].addEventListener("click", tileNum5);
+          tiles[5].addEventListener("click", tileNum6);
+          tiles[6].addEventListener("click", tileNum7);
+          tiles[7].addEventListener("click", tileNum8);
+          tiles[8].addEventListener("click", tileNum9);
+          tiles[9].addEventListener("click", tileNum10);
+          tiles[10].addEventListener("click", tileNum11);
+          tiles[11].addEventListener("click", tileNum12);
+          tiles[12].addEventListener("click", tileNum13);
+          tiles[13].addEventListener("click", tileNum14);
+          tiles[14].addEventListener("click", tileNum15);
+          tiles[15].addEventListener("click", tileNum16);
+          tiles[16].addEventListener("click", tileNum17);
+          tiles[17].addEventListener("click", tileNum18);
+          tiles[18].addEventListener("click", tileNum19);
+          tiles[19].addEventListener("click", tileNum20);
+          tiles[20].addEventListener("click", tileNum21);
+          tiles[21].addEventListener("click", tileNum22);
+          tiles[22].addEventListener("click", tileNum23);
+          tiles[23].addEventListener("click", tileNum24);
+          tiles[24].addEventListener("click", tileNum25);
+        }
+  
+        function darkmode() {
+          var element = document.body;
+          element.classList.toggle("dark-Mode");
+          var element2 = document.getElementById("score");
+          element2.classList.toggle("scorecolor");
+          var element3 = document.getElementById("darkBtn");
+          element3.classList.toggle("moonshadow");
+        }
+        function score() {
+          counter++;
+          document.getElementById("scorespan").innerHTML = Math.floor(counter);
+          if (tiles[i].classList.contains("purple")) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum1() {
+          this.classList.toggle("purple");
+          tiles[1].classList.toggle("purple");
+          tiles[5].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum2() {
+          tiles[0].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[2].classList.toggle("purple");
+          tiles[6].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum3() {
+          tiles[1].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[3].classList.toggle("purple");
+          tiles[7].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum4() {
+          tiles[2].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[4].classList.toggle("purple");
+          tiles[8].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum5() {
+          tiles[3].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[9].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum6() {
+          tiles[0].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[6].classList.toggle("purple");
+          tiles[10].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum7() {
+          tiles[1].classList.toggle("purple");
+          tiles[5].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[7].classList.toggle("purple");
+          tiles[11].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum8() {
+          tiles[2].classList.toggle("purple");
+          tiles[6].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[8].classList.toggle("purple");
+          tiles[12].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum9() {
+          tiles[3].classList.toggle("purple");
+          tiles[7].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[9].classList.toggle("purple");
+          tiles[13].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum10() {
+          tiles[4].classList.toggle("purple");
+          tiles[8].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[14].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum11() {
+          tiles[5].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[11].classList.toggle("purple");
+          tiles[15].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum12() {
+          tiles[6].classList.toggle("purple");
+          tiles[10].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[12].classList.toggle("purple");
+          tiles[16].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum13() {
+          tiles[7].classList.toggle("purple");
+          tiles[11].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[13].classList.toggle("purple");
+          tiles[17].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum14() {
+          tiles[8].classList.toggle("purple");
+          tiles[12].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[14].classList.toggle("purple");
+          tiles[18].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum15() {
+          tiles[9].classList.toggle("purple");
+          tiles[13].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[19].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum16() {
+          tiles[10].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[16].classList.toggle("purple");
+          tiles[20].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum17() {
+          tiles[11].classList.toggle("purple");
+          tiles[15].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[17].classList.toggle("purple");
+          tiles[21].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum18() {
+          tiles[12].classList.toggle("purple");
+          tiles[16].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[18].classList.toggle("purple");
+          tiles[22].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum19() {
+          tiles[13].classList.toggle("purple");
+          tiles[17].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[19].classList.toggle("purple");
+          tiles[23].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum20() {
+          tiles[14].classList.toggle("purple");
+          tiles[18].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[24].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum21() {
+          tiles[15].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[21].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum22() {
+          tiles[16].classList.toggle("purple");
+          tiles[20].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[22].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum23() {
+          tiles[17].classList.toggle("purple");
+          tiles[21].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[23].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum24() {
+          tiles[18].classList.toggle("purple");
+          tiles[22].classList.toggle("purple");
+          this.classList.toggle("purple");
+          tiles[24].classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+        function tileNum25() {
+          tiles[19].classList.toggle("purple");
+          tiles[23].classList.toggle("purple");
+          this.classList.toggle("purple");
+          if (
+            tiles[1].classList.contains("purple") &&
+            tiles[2].classList.contains("purple") &&
+            tiles[3].classList.contains("purple") &&
+            tiles[4].classList.contains("purple") &&
+            tiles[5].classList.contains("purple") &&
+            tiles[6].classList.contains("purple") &&
+            tiles[7].classList.contains("purple") &&
+            tiles[8].classList.contains("purple") &&
+            tiles[9].classList.contains("purple") &&
+            tiles[10].classList.contains("purple") &&
+            tiles[11].classList.contains("purple") &&
+            tiles[12].classList.contains("purple") &&
+            tiles[13].classList.contains("purple") &&
+            tiles[14].classList.contains("purple") &&
+            tiles[15].classList.contains("purple") &&
+            tiles[16].classList.contains("purple") &&
+            tiles[17].classList.contains("purple") &&
+            tiles[18].classList.contains("purple") &&
+            tiles[19].classList.contains("purple") &&
+            tiles[20].classList.contains("purple") &&
+            tiles[21].classList.contains("purple") &&
+            tiles[22].classList.contains("purple") &&
+            tiles[23].classList.contains("purple") &&
+            tiles[24].classList.contains("purple")
+          ) {
+            gameOver.innerHTML = "you win!";
+          }
+        }
+  
+        // animation for Starting the game
+        const startGame = () => {
+          const playBtn = document.querySelector(".intro button");
+          const introScreen = document.querySelector(".intro");
+          const game = document.querySelector(".all");
+  
+          playBtn.addEventListener("click", () => {
+            introScreen.classList.add("fadeOut");
+            game.classList.add("fadeIn");
+          });
+        };
+        startGame();</script>
 </body>
 </html>
